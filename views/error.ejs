@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <base href="/">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+        <meta name="theme-color" content="#ff0000">
+        <meta name="author" content="RappyTV#6969">
+        <meta name="description" content="Lookup a Discord User or Bot ID.">
+        <meta name="keywords" content="discord.id, discord loopkup, id.rappytv.com">
+        <meta property="og:title" content="Discord Lookup">
+        <meta property="og:url" content="https://id.rappytv.com">
+        <meta property="og:description" content="Lookup a Discord User or Bot ID.">
+        <meta property="og:image" content="img/logo.png">
+        <title>Discord Lookup</title>
+        <meta property="og:site_name" content="Discord ID">
+        <meta name="twitter:title" content="Discord Lookup">
+        <meta name="twitter:image" content="img/logo.png">
+        <meta name="twitter:url" content="https://id.rappytv.com">
+        <meta name="twitter:card" content="Lookup a Discord User or Bot ID.">
+        <link rel="shortcut icon" type="image/png" href="img/logo.png">
+        <link rel="icon" type="image/png"href="img/logo.png">
+        <link href="css/app.css" rel="stylesheet">
+    </head>
+    <body>
+        <div id="app">
+            <header class="header">
+                <div id="nav"><span class="centertxt"><span class="fas fa-search"></span> <a href="/" style="color: #ffffff !important; cursor: pointer;">Discord Lookup</a></span></div>
+            </header>
+            <div class="fpix">
+                <div class="row justify-content-center">
+                    <h2><%= locals.status || `500` %>: <%= locals.error || `Ein Fehler ist aufgetreten!` %></h2>
+                </div>
+                <div class="row justify-content-center" style="margin-top: 2rem;">
+                    <a href="<%- locals.back %>">
+                        <button class="btn btn-primary">Go back</button>
+                    </a>
+                </div>
+            </div>
+            <div class="footerarea">
+                <p id="footer" class="footertxt0" style="margin: 0 0 0 0;">© <a href="https://www.rappytv.com" style="color: #91D6FF !important;">RappyTV#6969</a> | <a href="https://github.com/UltronDevelopment/discord.id">Check this Project out on GitHub</a> | Not affiliated with Discord, Inc.</p>
+            </div>
+        </div>
+    </body>
+</html>

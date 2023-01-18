@@ -1,0 +1,8 @@
+{
+    "port": 10000,
+    "token": "",
+    "certificate": {
+        "cert": "",
+        "key": ""
+    }
+}

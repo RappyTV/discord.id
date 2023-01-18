@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <base href="/">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+        <meta name="theme-color" content="#ff0000">
+        <meta name="author" content="RappyTV#6969">
+        <meta name="description" content="Lookup a Discord User or Bot ID.">
+        <meta name="keywords" content="discord.id, discord loopkup, id.rappytv.com">
+        <meta property="og:title" content="Discord Lookup">
+        <meta property="og:url" content="https://id.rappytv.com">
+        <meta property="og:description" content="Lookup a Discord User or Bot ID.">
+        <meta property="og:image" content="img/logo.png">
+        <title>Discord Lookup</title>
+        <meta property="og:site_name" content="Discord ID">
+        <meta name="twitter:title" content="Discord Lookup">
+        <meta name="twitter:image" content="img/logo.png">
+        <meta name="twitter:url" content="https://id.rappytv.com">
+        <meta name="twitter:card" content="Lookup a Discord User or Bot ID.">
+        <link rel="shortcut icon" type="image/png" href="img/logo.png">
+        <link rel="icon" type="image/png"href="img/logo.png">
+        <link href="css/app.css" rel="stylesheet">
+    </head>
+    <body>
+        <div id="app">
+            <header class="header">
+                <div id="nav"><span class="centertxt"><span class="fas fa-search"></span> <a href="/" style="color: #ffffff !important; cursor: pointer;">Discord Lookup</a></span></div>
+            </header>
+            <div class="fpix">
+                <div class="container">
+                    <div class="row" style="justify-content: center;">
+                        <div class="col-md-4">
+                            <label for="inputid">User ID:</label>
+                            <div class="lbc"></div>
+                            <input onkeypress="return number(event)" onkeyup="isEnabled()" maxlength="22" type="text" id="inputid" class="form-control blackinput">
+                            <br>
+                            <div id="tbzh" style="float: right;">
+                                <button id="lookup" style="cursor: pointer;" onclick="redirect()" class="form-control btn btn-red smallbtn smallerinp pull-right" disabled>Lookup
+                                    <div class="ball-pulse smallBall" style="display: none;">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footerarea">
+                <p id="footer" class="footertxt0" style="margin: 0 0 0 0;">© <a href="https://www.rappytv.com" style="color: #91D6FF !important;">RappyTV#6969</a> | <a href="https://github.com/UltronDevelopment/discord.id">Check this Project out on GitHub</a> | Not affiliated with Discord, Inc.</p>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            document.getElementById(`inputid`).addEventListener("paste", function(e) {
+                if(isNaN(e.clipboardData.getData(`text`))) e.preventDefault();
+                isEnabled();
+            });
+
+            function number(event) {
+                console.log(event);
+                const ASCIICode = event.which ? event.which : event.keyCode 
+                if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57)) 
+                    return false; 
+                return true; 
+            }
+
+            function isEnabled() {
+                const button = document.getElementById(`lookup`);
+                const input = document.getElementById(`inputid`);
+                button.disabled = input.value == `` || input.value.length < 15;
+            }
+
+            function redirect() {
+                const input = document.getElementById(`inputid`);
+                if(document.getElementById(`lookup`).disabled || input.value == `` || input.value.length < 15) return;
+                window.location.pathname = `${input.value}`;
+            }
+        </script>
+    </body>
+</html>
