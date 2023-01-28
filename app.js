@@ -10,6 +10,11 @@ server.cfg = require(`./src/config.json`);
 server.redirects = require(`./src/redirects.json`);
 server.util = require(`./src/util`);
 
+if(server.cfg.token.trim() == ``) {
+    console.log(`[ERROR] Please provide a valid token in src/config.json!`);
+    process.exit(1);
+}
+
 const options = {
     cert: readFileSync(server.cfg.certificate.cert),
     key: readFileSync(server.cfg.certificate.key)
