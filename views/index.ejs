@@ -61,6 +61,10 @@
                 isEnabled();
             });
 
+            document.addEventListener(`keydown`, (event) => {
+                if(event.key == `Enter` && input == document.activeElement) redirect();
+            });
+
             function number(event) {
                 const ASCIICode = event.which ? event.which : event.keyCode 
                 if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57)) 
