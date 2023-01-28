@@ -46,5 +46,5 @@ Into `path` you insert the custom path (domain.tld/PATH) and into `red` you put 
 Now `https://domain.tld/myserver` will redirect you to `https://discord.gg/myserver`.
 
 ### 4️⃣ Start the server
-Just execute the `npm run start` or `node .` command to start the bot.<br>
+Just execute the `npm run start` or `node .` command to start the server.<br>
 **Have fun!**
