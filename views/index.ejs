@@ -51,21 +51,25 @@
         </div>
 
         <script type="text/javascript">
-            document.getElementById(`inputid`).addEventListener("paste", function(e) {
-                if(isNaN(e.clipboardData.getData(`text`))) e.preventDefault();
+            const input = document.getElementById(`inputid`);
+
+            input.addEventListener("paste", function(e) {
+                e.preventDefault();
+                const text = e.clipboardData.getData(`text`);
+                const isValid = !isNaN(text);
+                if(isValid) input.value = text;
                 isEnabled();
             });
 
             function number(event) {
                 const ASCIICode = event.which ? event.which : event.keyCode 
                 if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57)) 
-                    return false; 
-                return true; 
+                    return false;
+                return true;
             }
 
             function isEnabled() {
                 const button = document.getElementById(`lookup`);
-                const input = document.getElementById(`inputid`);
                 button.disabled = input.value == `` || input.value.length < 15;
             }
 
