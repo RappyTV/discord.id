@@ -2,22 +2,22 @@
 <html>
     <head>
         <base href="/">
+        <title>Discord Lookup</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-        <meta name="theme-color" content="#ff0000">
+        <meta name="theme-color" content="<%= locals.color || `#ff0000` %>">
         <meta name="author" content="RappyTV#6969">
         <meta name="description" content="Lookup a Discord User or Bot ID.">
         <meta name="keywords" content="discord.id, discord loopkup, id.rappytv.com">
-        <meta property="og:title" content="Discord Lookup">
-        <meta property="og:url" content="https://id.rappytv.com">
+        <meta property="og:title" content="<%= locals.tag %> looked up">
+        <meta property="og:url" content="https://id.rappytv.com/<%= locals.id %>">
         <meta property="og:description" content="Lookup a Discord User or Bot ID.">
-        <meta property="og:image" content="img/logo.png">
-        <title>Discord Lookup</title>
+        <meta property="og:image" content="<%= locals.pfp %>">
         <meta property="og:site_name" content="Discord ID">
-        <meta name="twitter:title" content="Discord Lookup">
-        <meta name="twitter:image" content="img/logo.png">
-        <meta name="twitter:url" content="https://id.rappytv.com">
+        <meta name="twitter:title" content="<%= locals.tag %> looked up">
+        <meta name="twitter:image" content="<%= locals.pfp %>">
+        <meta name="twitter:url" content="https://id.rappytv.com/<%= locals.id %>">
         <meta name="twitter:card" content="Lookup a Discord User or Bot ID.">
         <link rel="shortcut icon" type="image/png" href="img/logo.png">
         <link rel="icon" type="image/png"href="img/logo.png">
