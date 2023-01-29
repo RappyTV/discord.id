@@ -1,7 +1,6 @@
 module.exports = {
     error(error, req, res, next) {
-        const code = error.status || 500;
-        res.status(code).render('error', error);
+        res.render('error', error);
     },
     
     getUserBadges(flags) {
