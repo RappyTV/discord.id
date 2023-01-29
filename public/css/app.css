@@ -51,6 +51,10 @@ body {
     justify-content: center
 }
 
+.justify-content-center {
+    justify-content: center !important;
+}
+
 .blackinput {
     background-color: #424b59 !important;
     color: #fff !important;
