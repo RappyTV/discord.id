@@ -43,11 +43,6 @@ app.get(`/`, (req, res) => {
     res.status(200).render(`index`);
 });
 
-// Test page
-app.get(`/test`, (req, res) => {
-    res.status(200).render(`test`);
-});
-
 // Load pages without route
 app.use((req, res, next) => {
     const file = req.originalUrl.slice(1).split(`?`)[0];
