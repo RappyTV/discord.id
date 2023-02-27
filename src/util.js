@@ -1,5 +1,6 @@
 module.exports = {
     error(error, req, res, next) {
+        error.version = server.version;
         res.render('error', error);
     },
     

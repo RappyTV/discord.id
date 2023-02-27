@@ -2,26 +2,37 @@ const express = require(`express`);
 global.server = {};
 const app = express();
 const https = require(`https`);
+const http = require(`http`);
 const path = require(`path`);
 const axios = require(`axios`);
-const { readFileSync } = require("fs");
+const { readFileSync, existsSync } = require("fs");
 
 server.cfg = require(`./src/config.json`);
 server.redirects = require(`./src/redirects.json`);
 server.util = require(`./src/util`);
+server.version = require(`./package.json`).version;
+
+const options = {};
 
 if(server.cfg.token.trim() == ``) {
     console.log(`[ERROR] Please provide a valid token in src/config.json!`);
     process.exit(1);
 }
-
-const options = {
-    cert: readFileSync(server.cfg.certificate.cert),
-    key: readFileSync(server.cfg.certificate.key)
+if(server.cfg.ssl.useSSL) {
+    if(!existsSync(server.cfg.ssl.cert) || !existsSync(server.cfg.ssl.key)) {
+        console.log(`[ERROR] Invalid certificate or private key path!\n[INFO] If you don't want to use an SSL certificate please disable the option in src/config.json!`);
+        process.exit(1);
+    }
+    options.cert = readFileSync(server.cfg.ssl.cert);
+    options.key = readFileSync(server.cfg.ssl.key);
 }
 
-server.https = https.createServer(options, app).listen(server.cfg.port, () => {
-    console.log(`[SERVER] HTTPS listening on Port ${server.cfg.port}!`);
+if(server.cfg.ssl.useSSL) server.https = https.createServer(options, app).listen(server.cfg.ssl.port, () => {
+    console.log(`[SERVER] HTTPS listening on port ${server.cfg.ssl.port}!`);
+});
+
+server.http = http.createServer(app).listen(server.cfg.port, () => {
+    console.log(`[SERVER] HTTP listening on port ${server.cfg.port}`);
 });
 
 // Views
@@ -30,17 +41,16 @@ app.set(`views`, path.join(__dirname, `views`));
 app.use(express.static(`./public`));
 
 app.use((req, res, next) => {
-    if(process.env.NODE_ENV != 'development' && !req.secure) {
+    if(process.env.NODE_ENV != 'development' && !req.secure && server.cfg.ssl.useSSL) {
         return res.redirect("https://" + req.headers.host + req.url);
     }
-    if(req.headers.host.includes(`rappytv.com:10000`)) return res.redirect(`https://id.rappytv.com`);
 
     next();
 });
 
 // Index page
 app.get(`/`, (req, res) => {
-    res.status(200).render(`index`);
+    res.status(200).render(`index`, { version: server.version });
 });
 
 // Load pages without route
@@ -76,7 +86,7 @@ app.get(`/:id`, async (req, res, next) => {
     const created = new Date(server.util.getTimestamp(id)).toUTCString();
     const color = data.banner_color;
 
-    res.render(`user`, { pfp, banner, id, tag, bot: data.bot, badges, created, color });
+    res.render(`user`, { pfp, banner, id, tag, bot: data.bot, badges, created, color, version: server.version });
 });
 
 app.use(server.util.error);

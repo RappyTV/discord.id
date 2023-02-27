@@ -16,14 +16,20 @@ Your [src/config.json](https://github.com/UltronDevelopment/discord.id/blob/mast
 {
     "port": 10000,
     "token": "",
-    "certificate": {
+    "ssl": {
+        "useSSL": true,
+        "port": 11000,
         "cert": "",
         "key": ""
     }
 }
 ```
-Just insert a bot token (you can't fetch users without a bot) and set the port to your desired port the website should run on (only https)<br>
-Then insert the path to your certificate into `certificate.cert` and the path to your key to `certificate.key`.
+- `port` - The http port
+- `token` - Your bot's token (you can't fetch users without a bot token)
+- `ssl.useSSL` - If the server should use an SSL certificate
+- `ssl.port` - The https port
+- `ssl.cert` - The path to your fullchain certificate file
+- `ssl.key` - The path to your private key file
 
 ### 3️⃣ Redirects
 To redirect custom paths to a specific url add an object like this to the array in [src/redirects.json](https://github.com/UltronDevelopment/discord.id/blob/master/src/redirects.json):

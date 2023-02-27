@@ -1,7 +1,9 @@
 {
     "port": 10000,
     "token": "",
-    "certificate": {
+    "ssl": {
+        "useSSL": true,
+        "port": 11000,
         "cert": "",
         "key": ""
     }
