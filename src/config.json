@@ -1,6 +1,6 @@
 {
     "port": 10000,
-    "token": "MTA1Nzc2NDYyMDcwMzYzNzYyNA.GWFiPH.XPKHs4w_yaVdYnQMRCqorzuhG6M64wOlF6kPcY",
+    "token": "",
     "ssl": {
         "useSSL": false,
         "port": 11000,
