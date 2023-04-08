@@ -31,7 +31,13 @@ if(server.cfg.ssl.useSSL) server.https = https.createServer(options, app).listen
     console.log(`[SERVER] HTTPS listening on port ${server.cfg.ssl.port}!`);
 });
 
-server.http = http.createServer(app).listen(server.cfg.port, () => {
+server.http = http.createServer(app).listen(server.cfg.port, async () => {
+    const isTokenValid = await server.util.checkToken(server.cfg.token);
+
+    if(!isTokenValid) {
+        console.log(`[ERROR] Invalid token!`);
+        process.exit(1);
+    }
     console.log(`[SERVER] HTTP listening on port ${server.cfg.port}`);
 });
 
