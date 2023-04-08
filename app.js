@@ -69,7 +69,7 @@ app.use((req, res, next) => {
 
 app.get(`/user/:id`, async (req, res, next) => {
     const id = req.params.id;
-    if(!id || id.trim() == `` || id.length < 15 || isNaN(id)) return next({ status: 404, error: `Page not found! You sure you clicked the correct link?`, back: `/` });
+    if(!id || !server.util.isSnowflake(id)) return next({ status: 404, error: `Page not found! You sure you clicked the correct link?`, back: `/` });
 
     const request = await axios({
         method: `get`,
@@ -78,9 +78,8 @@ app.get(`/user/:id`, async (req, res, next) => {
             'Authorization': `Bot ${server.cfg.token}`
         }
     }).catch((err) => {
-        return { err };
+        return next({ status: err.response.status, error: err.response.statusText });
     });
-    if(request.err) return next({ status: request.err.response.status, error: request.err.response.statusText });
     const { data } = request;
 
     const pfp = data.avatar ? `https://cdn.discordapp.com/avatars/${id}/${data.avatar}.${data.avatar.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/${data.discriminator % 5}.png`;
@@ -96,7 +95,30 @@ app.get(`/user/:id`, async (req, res, next) => {
 });
 
 app.get(`/guild/:id`, async (req, res, next) => {
+    const id = req.params.id;
+    if(!id || !server.util.isSnowflake(id)) return next({ status: 404, error: `Page not found! You sure you clicked the correct link?`, back: `/` });
 
+    const invite = await server.util.fetchGuild(id);
+    if(!invite.success) return next({ status: 401, error: invite.error });
+
+    const { guild, channel, code } = invite;
+
+    const pfp = guild.icon ? `https://cdn.discordapp.com/icons/${id}/${guild.icon}.${guild.icon.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/0.png`;
+    const banner = guild.banner ? `https://cdn.discordapp.com/banners/${id}/${guild.banner}.${guild.banner.startsWith(`a_`) ? `gif` : `png`}?size=1024` : null;
+    const inviteChannel = `https://discord.com/channels/${id}/${channel.id}`;
+    const created = new Date(server.util.getTimestamp(id)).toUTCString();
+
+    res.render(`guild`, {
+        pfp,
+        banner,
+        id,
+        name: guild.name,
+        created,
+        invite: code,
+        channelName: channel.name,
+        inviteChannel,
+        version: server.version
+    });
 });
 
 app.use(server.util.error);
