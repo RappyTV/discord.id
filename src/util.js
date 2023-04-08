@@ -41,7 +41,23 @@ module.exports = {
         return badges;
     },
 
+    /**
+     * 
+     * @param {string} id 
+     * @returns {boolean}
+     */
+
+    isSnowflake(id) {
+        return BigInt(id).toString() === id;
+    },
+
+    /**
+     * 
+     * @param {string} id 
+     * @returns {number}
+     */
+
     getTimestamp(id) {
-        return Number(BigInt(id) >> 22n) + 1_420_070_400_000;
+        return Number(BigInt(id) >> 22n) + 1420070400000n;
     }
 }
