@@ -109,7 +109,7 @@
             function redirect() {
                 const input = document.getElementById(`inputid`);
                 if(document.getElementById(`lookup`).disabled || input.value == `` || input.value.length < 15) return;
-                window.location.pathname = `${input.value}`;
+                window.location.pathname = `user/${input.value}`;
             }
 
             function showColor(bool, color) {
