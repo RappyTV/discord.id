@@ -59,14 +59,6 @@ app.get(`/`, (req, res) => {
     res.status(200).render(`index`, { version: server.version });
 });
 
-// Load pages without route
-app.use((req, res, next) => {
-    const file = req.originalUrl.slice(1).split(`?`)[0];
-    const redirect = server.redirects.find((r) => r.path == file);
-    if(redirect) return res.redirect(redirect.red);
-    else next();
-});
-
 app.get(`/user/:id`, async (req, res, next) => {
     const id = req.params.id;
     if(!id || !server.util.isSnowflake(id)) return next({ status: 404, error: `Page not found! You sure you clicked the correct link?`, back: `/` });
@@ -121,8 +113,12 @@ app.get(`/guild/:id`, async (req, res, next) => {
     });
 });
 
+// Load pages without route
 app.use((req, res, next) => {
+    const file = req.originalUrl.slice(1).split(`?`)[0];
+    const redirect = server.redirects.find((r) => r.path == file);
+    if(redirect) return res.redirect(redirect.red);
     return next({ status: 404, error: `Page not found! You sure you clicked the correct link?` });
-})
+});
 
 app.use(server.util.error);
