@@ -73,7 +73,8 @@ module.exports = {
                     success: true,
                     error: null,
                     guild,
-                    channel
+                    channel,
+                    code: instant_invite
                 }
             } catch(err) {
                 return { success: false, error: `The widget invite could not be retrieved!` };
