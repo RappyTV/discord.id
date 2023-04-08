@@ -1,7 +1,30 @@
+const { default: axios } = require("axios");
+
 module.exports = {
     error(error, req, res, next) {
         error.version = server.version;
         res.render('error', error);
+    },
+
+    /**
+     * 
+     * @param {string} token 
+     * @returns {Promise<boolean>}
+     */
+
+    async checkToken(token) {
+        try {
+            await axios({
+                url: `https://discord.com/api/v10/users/@me`,
+                method: `get`,
+                headers: {
+                    "Authorization": `Bot ${token}`
+                }
+            });
+        } catch(err) {
+            return false;
+        }
+        return true;
     },
     
     getUserBadges(flags) {
