@@ -63,27 +63,29 @@ app.get(`/user/:id`, async (req, res, next) => {
     const id = req.params.id;
     if(!id || !server.util.isSnowflake(id)) return next({ status: 404, error: `Page not found! You sure you clicked the correct link?`, back: `/` });
 
-    const request = await axios({
-        method: `get`,
-        url: `https://discord.com/api/v10/users/${id}`,
-        headers: {
-            'Authorization': `Bot ${server.cfg.token}`
-        }
-    }).catch((err) => {
-        return next({ status: err.response.status, error: err.response.statusText });
-    });
-    const { data } = request;
-
-    const pfp = data.avatar ? `https://cdn.discordapp.com/avatars/${id}/${data.avatar}.${data.avatar.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/${data.discriminator % 5}.png`;
-    const banner = data.banner ? `https://cdn.discordapp.com/banners/${id}/${data.banner}.${data.banner.startsWith(`a_`) ? `gif` : `png`}?size=1024` : null;
-    const tag = `${data.username}#${data.discriminator}`;
-    const badges = server.util.getUserBadges(data.public_flags).map((badge) => {
-        return `<span><img src="img/${badge}.png" class="badgepng"></span>`;
-    }).join(`\n`);
-    const created = new Date(server.util.getTimestamp(id)).toUTCString();
-    const color = data.banner_color;
-
-    res.render(`user`, { pfp, banner, id, tag, bot: data.bot, badges, created, color, version: server.version });
+    try {
+        const request = await axios({
+            method: `get`,
+            url: `https://discord.com/api/v10/users/${id}`,
+            headers: {
+                'Authorization': `Bot ${server.cfg.token}`
+            }
+        });
+        const { data } = request;
+    
+        const pfp = data.avatar ? `https://cdn.discordapp.com/avatars/${id}/${data.avatar}.${data.avatar.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/${data.discriminator % 5}.png`;
+        const banner = data.banner ? `https://cdn.discordapp.com/banners/${id}/${data.banner}.${data.banner.startsWith(`a_`) ? `gif` : `png`}?size=1024` : null;
+        const tag = `${data.username}#${data.discriminator}`;
+        const badges = server.util.getUserBadges(data.public_flags).map((badge) => {
+            return `<span><img src="img/${badge}.png" class="badgepng"></span>`;
+        }).join(`\n`);
+        const created = new Date(server.util.getTimestamp(id)).toUTCString();
+        const color = data.banner_color;
+    
+        res.render(`user`, { pfp, banner, id, tag, bot: data.bot, badges, created, color, version: server.version });
+    } catch(err) {
+        next({ status: err.response.status, error: err.response.statusText });
+    }
 });
 
 app.get(`/guild/:id`, async (req, res, next) => {
