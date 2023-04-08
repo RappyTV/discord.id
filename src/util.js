@@ -44,6 +44,50 @@ module.exports = {
     /**
      * 
      * @param {string} id 
+     * @returns {}
+     */
+
+    async fetchGuild(id) {
+        try {
+            const widget = await axios({
+                url: `https://discord.com/api/v10/guilds/${id}/widget.json`,
+                method: `get`,
+                headers: {
+                    "Authorization": `Bot ${server.cfg.token}`
+                }
+            });
+
+            const { instant_invite } = widget.data;
+
+            try {
+                const request = await axios({
+                    url: `https://discord.com/api/v10/invites/${instant_invite.split('/')[4]}`,
+                    method: `get`,
+                    headers: {
+                        "Authorization": `Bot ${server.cfg.token}`
+                    }
+                });
+                const { guild, channel } = request.data;
+
+                return {
+                    success: true,
+                    error: null,
+                    guild,
+                    channel
+                }
+            } catch(err) {
+                return { success: false, error: `The widget invite could not be retrieved!` };
+            }
+        } catch(err) {
+            if(err.response.status == 404) return { success: false, error: `Unknown Guild.` };
+            if(err.response?.status == 403) return { success: false, error: `This server's widget is disabled.` };
+            return { success: false, error: err.response?.data?.msg };
+        }
+    },
+
+    /**
+     * 
+     * @param {string} id 
      * @returns {boolean}
      */
 
@@ -58,6 +102,6 @@ module.exports = {
      */
 
     getTimestamp(id) {
-        return Number(BigInt(id) >> 22n) + 1420070400000n;
+        return Number((BigInt(id) >> 22n) + 1420070400000n);
     }
 }
