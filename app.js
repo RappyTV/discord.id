@@ -67,7 +67,7 @@ app.use((req, res, next) => {
     else next();
 });
 
-app.get(`/:id`, async (req, res, next) => {
+app.get(`/user/:id`, async (req, res, next) => {
     const id = req.params.id;
     if(!id || id.trim() == `` || id.length < 15 || isNaN(id)) return next({ status: 404, error: `Page not found! You sure you clicked the correct link?`, back: `/` });
 
@@ -93,6 +93,10 @@ app.get(`/:id`, async (req, res, next) => {
     const color = data.banner_color;
 
     res.render(`user`, { pfp, banner, id, tag, bot: data.bot, badges, created, color, version: server.version });
+});
+
+app.get(`/guild/:id`, async (req, res, next) => {
+
 });
 
 app.use(server.util.error);
