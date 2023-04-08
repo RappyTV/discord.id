@@ -93,6 +93,8 @@ module.exports = {
      */
 
     isSnowflake(id) {
+        if(isNaN(id)) return false;
+        if(id.length < 14) return false;
         return BigInt(id).toString() === id;
     },
 
