@@ -121,4 +121,8 @@ app.get(`/guild/:id`, async (req, res, next) => {
     });
 });
 
+app.use((req, res, next) => {
+    return next({ status: 404, error: `Page not found! You sure you clicked the correct link?` });
+})
+
 app.use(server.util.error);
