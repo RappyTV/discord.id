@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <base href="/">
+        <title>Discord Lookup</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+        <meta name="theme-color" content="#ff0000">
+        <meta name="author" content="RappyTV#6969">
+        <meta name="description" content="Lookup a Discord User or Bot ID.">
+        <meta name="keywords" content="discord.id, discord loopkup, id.rappytv.com">
+        <meta property="og:title" content="<%= locals.id %> looked up">
+        <meta property="og:url" content="https://id.rappytv.com/<%= locals.id %>">
+        <meta property="og:description" content="Lookup a Discord User or Bot ID.">
+        <meta property="og:image" content="/img/logo.png">
+        <meta property="og:site_name" content="Discord ID">
+        <meta name="twitter:title" content="<%= locals.id %> looked up">
+        <meta name="twitter:image" content="/img/logo.png">
+        <meta name="twitter:url" content="https://id.rappytv.com/<%= locals.id %>">
+        <meta name="twitter:card" content="Lookup a Discord User or Bot ID.">
+        <link rel="shortcut icon" type="image/png" href="img/logo.png">
+        <link rel="icon" type="image/png"href="img/logo.png">
+        <link href="css/app.css" rel="stylesheet">
+    </head>
+    <body class="" data-modal-open-count="0">
+        <div id="app">
+            <header class="header">
+                <div id="nav"><span class="centertxt"><span class="fas fa-search"></span> <a href="/" style="color: #ffffff !important; cursor: pointer;">Discord Lookup</a></span></div>
+            </header>
+            <div class="fpix">
+                <div class="container">
+                    <div class="row" style="justify-content: center;">
+                        <div class="col-md-4">
+                            <label for="inputid">User or Guild ID:</label>
+                            <div class="lbc"></div>
+                            <input onkeypress="return number(event)" onkeyup="isEnabled()" maxlength="22" type="text" id="inputid" class="form-control blackinput" value="<%= locals.id %>">
+                            <br>
+                            <div id="tbzh" style="float: right;">
+                                <button id="lookup" style="cursor: pointer;" onclick="redirect()" class="form-control btn btn-red smallbtn smallerinp pull-right">Lookup
+                                    <div class="ball-pulse smallBall" style="display: none;">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="justify-content: center; margin-top: 4rem;">
+                        <div class="col-md-4 withdarker">
+                            <p><span class="fas fa-hashtag"></span> <strong>ID</strong>: <span class="resulth"><%= locals.id %></span></p>
+                            <p><span class="fas fa-asterisk"></span> <strong>Created</strong>: <span class="resulth" style="color: rgb(129, 200, 134);"><%= locals.created %></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footerarea">
+                <p id="footer" style="margin: 0 0 0 0;">© <a href="https://www.rappytv.com" style="color: #91D6FF !important;">RappyTV#6969</a> | <a href="https://github.com/UltronDevelopment/discord.id">Check this project out on GitHub</a> | <span style="color: #ffa09e;">Version <%= locals.version %></span> | Not affiliated with Discord, Inc.</p>
+            </div>
+        </div>
+
+        <script>
+            const input = document.getElementById(`inputid`);
+            
+            input.addEventListener("paste", function(e) {
+                e.preventDefault();
+                const text = e.clipboardData.getData(`text`);
+                const isValid = !isNaN(text);
+                if(isValid) input.value = text;
+                isEnabled();
+            });
+
+            document.addEventListener(`keydown`, (event) => {
+                if(event.key == `Enter` && input == document.activeElement) redirect();
+            });
+
+            function number(event) {
+                const ASCIICode = event.which ? event.which : event.keyCode;
+                if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57)) 
+                    return false;
+                return true;
+            }
+
+            function isEnabled() {
+                const button = document.getElementById(`lookup`);
+                button.disabled = input.value == `` || input.value.length < 15;
+            }
+
+            function redirect() {
+                const input = document.getElementById(`inputid`);
+                if(document.getElementById(`lookup`).disabled || input.value == `` || input.value.length < 15) return;
+                window.location.pathname = `${input.value}`;
+            }
+
+            function showColor(bool, color) {
+                const span = document.getElementById(`color`);
+
+                if(bool) {
+                    span.style = `box-shadow: ${color} 0px 0px 2px; color: ${color};`;
+                    span.setAttribute(`onmouseout`, `showColor(false, '${color}')`);
+                    span.removeAttribute(`onmouseover`);
+                    span.textContent = color;
+                } else {
+                    span.style = `border-radius: 2px; vertical-align: sub; display: inline-block; height: 1.1rem; width: 4.5rem; background-color: ${color};`;
+                    span.setAttribute(`onmouseover`, `showColor(true, '${color}')`);
+                    span.removeAttribute(`onmouseout`);
+                    span.textContent = ``;
+                }
+            }
+        </script>
+    </body>
+</html>

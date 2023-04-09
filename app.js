@@ -113,8 +113,9 @@ app.get(`/:id`, async (req, res, next) => {
             inviteChannel
         });
     } else {
-        // TODO: Create extra page
-        res.render(`index`);
+        const created = new Date(server.util.getTimestamp(id)).toUTCString();
+
+        res.render(`any`, { id, created });
     }
 });
 
