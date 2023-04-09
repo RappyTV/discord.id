@@ -79,7 +79,7 @@ app.get(`/user/:id`, async (req, res, next) => {
         });
         const { data } = request;
     
-        const pfp = data.avatar ? `https://cdn.discordapp.com/avatars/${id}/${data.avatar}.${data.avatar.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/${data.discriminator % 5}.png`;
+        const avatar = data.avatar ? `https://cdn.discordapp.com/avatars/${id}/${data.avatar}.${data.avatar.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/${data.discriminator % 5}.png`;
         const banner = data.banner ? `https://cdn.discordapp.com/banners/${id}/${data.banner}.${data.banner.startsWith(`a_`) ? `gif` : `png`}?size=1024` : null;
         const tag = `${data.username}#${data.discriminator}`;
         const badges = server.util.getUserBadges(data.public_flags).map((badge) => {
@@ -88,7 +88,7 @@ app.get(`/user/:id`, async (req, res, next) => {
         const created = new Date(server.util.getTimestamp(id)).toUTCString();
         const color = data.banner_color;
     
-        res.render(`user`, { pfp, banner, id, tag, bot: data.bot, badges, created, color, version: server.version });
+        res.render(`user`, { avatar, banner, id, tag, bot: data.bot, badges, created, color, version: server.version });
     } catch(err) {
         next({ status: err.response.status, error: err.response.statusText });
     }
@@ -103,13 +103,13 @@ app.get(`/guild/:id`, async (req, res, next) => {
 
     const { guild, channel, code } = invite;
 
-    const pfp = guild.icon ? `https://cdn.discordapp.com/icons/${id}/${guild.icon}.${guild.icon.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/0.png`;
+    const icon = guild.icon ? `https://cdn.discordapp.com/icons/${id}/${guild.icon}.${guild.icon.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/0.png`;
     const banner = guild.banner ? `https://cdn.discordapp.com/banners/${id}/${guild.banner}.${guild.banner.startsWith(`a_`) ? `gif` : `png`}?size=1024` : null;
     const inviteChannel = `https://discord.com/channels/${id}/${channel.id}`;
     const created = new Date(server.util.getTimestamp(id)).toUTCString();
 
     res.render(`guild`, {
-        pfp,
+        icon,
         banner,
         id,
         name: guild.name,
