@@ -682,6 +682,7 @@ textarea.form-control.is-invalid {
 
 .btn,
 .btn:focus {
+    color: #fff;
     box-shadow: none !important;
     border: none !important
 }
