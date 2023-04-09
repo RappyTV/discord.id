@@ -57,6 +57,7 @@ app.use((req, res, next) => {
 // Pass default values once
 app.use((req, res, next) => {
     res.locals.version = server.version;
+    res.locals.themeColor = server.cfg.theme;
     res.locals.theme = `<style>\n#nav {\n\tbackground: ${server.cfg.theme};\n}\n\n.btn {\n\tbackground-color: ${server.cfg.theme};\n}\n\n.btn:hover {\n\tbackground-color: ${server.cfg.hover};\n}\n\n.btn:focus {\n\tbackground-color: ${server.cfg.hover};\n}\n</style>`;
     next();
 });
