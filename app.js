@@ -101,6 +101,8 @@ app.get(`/:id`, async (req, res, next) => {
         const banner = guild.banner ? `https://cdn.discordapp.com/banners/${id}/${guild.banner}.${guild.banner.startsWith(`a_`) ? `gif` : `png`}?size=1024` : null;
         const inviteChannel = `https://discord.com/channels/${id}/${channel.id}`;
         const created = new Date(server.util.getTimestamp(id)).toUTCString();
+        const boosts = guild.premium_subscription_count;
+        const level = boosts > 13 ? 3 : boosts > 6 ? 2 : boosts > 1 ? 1 : 0;
 
         res.render(`guild`, {
             icon,
@@ -108,6 +110,8 @@ app.get(`/:id`, async (req, res, next) => {
             id,
             name: guild.name,
             created,
+            boosts,
+            level,
             invite: code,
             channelName: channel.name,
             inviteChannel

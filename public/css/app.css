@@ -275,6 +275,10 @@ a {
     content: "\f057"
 }
 
+.fa-diamond:before {
+    content: "\f3a5"
+}
+
 .fas {
     font-family: Font Awesome\ 5 Pro;
     font-weight: 900

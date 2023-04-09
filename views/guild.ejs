@@ -58,6 +58,7 @@
                             <% } %>
                             <p><span class="fas fa-hashtag"></span> <strong>Guild ID</strong>: <span class="resulth"><%= locals.id %></span></p>
                             <p><span class="fas fa-tag"></span> <strong>Guild Name</strong>: <span class="resulth" style="color: #e49aff;"><%= locals.name %></span></p>
+                            <p><span class="fas fa-diamond"></span> <strong>Boosts</strong>: <span class="resulth"><%= locals.boosts %> (Level <%= locals.level %>)</span></p>
                             <p><span class="fas fa-envelope"></span> <strong>Instant Invite</strong>: <span class="resulth"><a href="<%= locals.invite %>"><%= locals.invite?.split('/')[4] %></a></span></p>
                             <p><span class="fas fa-channel"></span> <strong>Instant Invite Channel</strong>: <span class="resulth"><a href="<%= locals.inviteChannel %>"><%= locals.channelName %></a></span></p>
                             <p><span class="fas fa-x"></span> <strong>NSFW</strong>: <span class="resulth" style="color: #FFD966;"><%= locals.nsfw ? `Yes` : `No` %></span></p>
