@@ -259,6 +259,22 @@ a {
     content: "\f53f"
 }
 
+.fa-envelope:before {
+    content: "\f0e0"
+}
+
+.fa-tag:before {
+    content: "\f02b"
+}
+
+.fa-channel:before {
+    content: "\f550"
+}
+
+.fa-x:before {
+    content: "\f057"
+}
+
 .fas {
     font-family: Font Awesome\ 5 Pro;
     font-weight: 900
