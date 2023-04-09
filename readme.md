@@ -16,6 +16,8 @@ Your [src/config.json](https://github.com/UltronDevelopment/discord.id/blob/mast
 {
     "port": 10000,
     "token": "",
+    "theme": "#ff0000",
+    "hover": "#ff7777",
     "ssl": {
         "useSSL": true,
         "port": 11000,
@@ -26,6 +28,8 @@ Your [src/config.json](https://github.com/UltronDevelopment/discord.id/blob/mast
 ```
 - `port` - The http port
 - `token` - Your bot's token (you can't fetch users without a bot token)
+- `theme` - The color of the button and navbar
+- `hover` - The color of the button when hovering over it
 - `ssl.useSSL` - If the server should use an SSL certificate
 - `ssl.port` - The https port
 - `ssl.cert` - The path to your fullchain certificate file
