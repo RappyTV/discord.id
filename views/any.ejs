@@ -6,17 +6,17 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-        <meta name="theme-color" content="<%= locals.color || `#ff0000` %>">
+        <meta name="theme-color" content="#ff0000">
         <meta name="author" content="RappyTV#6969">
         <meta name="description" content="Lookup a Discord User or Bot ID.">
         <meta name="keywords" content="discord.id, discord loopkup, id.rappytv.com">
-        <meta property="og:title" content="<%= locals.tag %> looked up">
+        <meta property="og:title" content="<%= locals.id %> looked up">
         <meta property="og:url" content="https://id.rappytv.com/<%= locals.id %>">
         <meta property="og:description" content="Lookup a Discord User or Bot ID.">
-        <meta property="og:image" content="<%= locals.avatar %>">
+        <meta property="og:image" content="/img/logo.png">
         <meta property="og:site_name" content="Discord ID">
-        <meta name="twitter:title" content="<%= locals.tag %> looked up">
-        <meta name="twitter:image" content="<%= locals.avatar %>">
+        <meta name="twitter:title" content="<%= locals.id %> looked up">
+        <meta name="twitter:image" content="/img/logo.png">
         <meta name="twitter:url" content="https://id.rappytv.com/<%= locals.id %>">
         <meta name="twitter:card" content="Lookup a Discord User or Bot ID.">
         <link rel="shortcut icon" type="image/png" href="img/logo.png">
@@ -45,31 +45,9 @@
                     </div>
 
                     <div class="row" style="justify-content: center; margin-top: 4rem;">
-                        <div class="col-md-2 withdarker picbx" style="text-align: center;">
-                            <a href="<%= locals.avatar %>" target="_blank">
-                                <img src="<%= locals.avatar %>" class="avyimg">
-                            </a>
-                        </div>
                         <div class="col-md-4 withdarker">
-                            <% if(locals.banner) { %>
-                                <a href="<%= locals.banner %>" target="_blank">
-                                    <img src="<%= locals.banner %>" alt="Banner" style="margin-bottom: 2rem; width: 100%; border-radius: 5px;">
-                                </a>
-                            <% } %>
-                            <p><span class="fas fa-hashtag"></span> <strong>User ID</strong>: <span class="resulth"><%= locals.id %></span></p>
-                            <p><span class="fas fa-user"></span> <strong>Username</strong>: <span class="resulth" style="color: rgb(228, 154, 255);"><%= locals.tag %></span><%- locals.bot ? `<img src="img/15.png" style="vertical-align: text-top; height: 1.2rem; margin-left: 0.2rem; margin-bottom: 0.1rem;">` : `` %></p>
-                            <p><span class="fas fa-tags"></span> <strong>Badges</strong>:
-                                <%- locals.badges || `-` %>
-                            </p>
+                            <p><span class="fas fa-hashtag"></span> <strong>ID</strong>: <span class="resulth"><%= locals.id %></span></p>
                             <p><span class="fas fa-asterisk"></span> <strong>Created</strong>: <span class="resulth" style="color: rgb(129, 200, 134);"><%= locals.created %></span></p>
-                            <% if(locals.banner) { %>
-                                <p><span class="fas fa-palette"></span> <strong>Banner Color</strong>:
-                                    <span class="resulth">
-                                        <%- `<span id="color" style="border-radius: 2px; vertical-align: sub; display: inline-block; height: 1.1rem; width: 4.5rem; background-color: ${locals.color};" onmouseover="showColor(true, '${locals.color}')">` %>
-                                        </span>
-                                    </span>
-                                </p>
-                            <% } %>
                         </div>
                     </div>
                 </div>

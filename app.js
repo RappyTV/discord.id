@@ -54,9 +54,15 @@ app.use((req, res, next) => {
     next();
 });
 
+// Pass default values once
+app.use((req, res, next) => {
+    res.locals.version = server.version;
+    next();
+});
+
 // Index page
 app.get(`/`, (req, res) => {
-    res.status(200).render(`index`, { version: server.version });
+    res.status(200).render(`index`);
 });
 
 // Load pages without route
@@ -69,30 +75,52 @@ app.use((req, res, next) => {
 
 app.get(`/:id`, async (req, res, next) => {
     const id = req.params.id;
-    if(!id || id.trim() == `` || id.length < 15 || isNaN(id)) return next({ status: 404, error: `Page not found! You sure you clicked the correct link?`, back: `/` });
+    if(!id) return next({ status: 400, error: `You have to enter a valid ID!`, back: `/` });
+    if(!server.util.isSnowflake(id)) return next({ status: 400, error: `Invalid snowflake!`, back: `/` });
 
-    const request = await axios({
-        method: `get`,
-        url: `https://discord.com/api/v10/users/${id}`,
-        headers: {
-            'Authorization': `Bot ${server.cfg.token}`
-        }
-    }).catch((err) => {
-        return { err };
-    });
-    if(request.err) return next({ status: request.err.response.status, error: request.err.response.statusText });
-    const { data } = request;
+    const user = await server.util.fetchUser(id);
+    const invite = await server.util.fetchGuild(id);
 
-    const pfp = data.avatar ? `https://cdn.discordapp.com/avatars/${id}/${data.avatar}.${data.avatar.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/${data.discriminator % 5}.png`;
-    const banner = data.banner ? `https://cdn.discordapp.com/banners/${id}/${data.banner}.${data.banner.startsWith(`a_`) ? `gif` : `png`}?size=1024` : null;
-    const tag = `${data.username}#${data.discriminator}`;
-    const badges = server.util.getUserBadges(data.public_flags).map((badge) => {
-        return `<span><img src="img/${badge}.png" class="badgepng"></span>`;
-    }).join(`\n`);
-    const created = new Date(server.util.getTimestamp(id)).toUTCString();
-    const color = data.banner_color;
+    if(user.success) {
+        const { data } = user;
+    
+        const avatar = data.avatar ? `https://cdn.discordapp.com/avatars/${id}/${data.avatar}.${data.avatar.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/${data.discriminator % 5}.png`;
+        const banner = data.banner ? `https://cdn.discordapp.com/banners/${id}/${data.banner}.${data.banner.startsWith(`a_`) ? `gif` : `png`}?size=1024` : null;
+        const tag = `${data.username}#${data.discriminator}`;
+        const badges = server.util.getUserBadges(data.public_flags).map((badge) => {
+            return `<span><img src="img/${badge}.png" class="badgepng"></span>`;
+        }).join(`\n`);
+        const created = new Date(server.util.getTimestamp(id)).toUTCString();
+        const color = data.banner_color;
+    
+        res.render(`user`, { avatar, banner, id, tag, bot: data.bot, badges, created, color });
+    } else if(invite.success) {
+        const { guild, channel, code } = invite;
 
-    res.render(`user`, { pfp, banner, id, tag, bot: data.bot, badges, created, color, version: server.version });
+        const icon = guild.icon ? `https://cdn.discordapp.com/icons/${id}/${guild.icon}.${guild.icon.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/0.png`;
+        const banner = guild.banner ? `https://cdn.discordapp.com/banners/${id}/${guild.banner}.${guild.banner.startsWith(`a_`) ? `gif` : `png`}?size=1024` : null;
+        const inviteChannel = `https://discord.com/channels/${id}/${channel.id}`;
+        const created = new Date(server.util.getTimestamp(id)).toUTCString();
+        const boosts = guild.premium_subscription_count;
+        const level = boosts > 13 ? 3 : boosts > 6 ? 2 : boosts > 1 ? 1 : 0;
+
+        res.render(`guild`, {
+            icon,
+            banner,
+            id,
+            name: guild.name,
+            created,
+            boosts,
+            level,
+            invite: code,
+            channelName: channel.name,
+            inviteChannel
+        });
+    } else {
+        const created = new Date(server.util.getTimestamp(id)).toUTCString();
+
+        res.render(`any`, { id, created });
+    }
 });
 
 app.use(server.util.error);

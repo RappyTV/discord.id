@@ -41,7 +41,91 @@ module.exports = {
         return badges;
     },
 
+    /**
+     * 
+     * @param {string} id 
+     * @returns {any}
+     */
+
+    async fetchUser(id) {
+        try {
+            const request = await axios({
+                method: `get`,
+                url: `https://discord.com/api/v10/users/${id}`,
+                headers: {
+                    'Authorization': `Bot ${server.cfg.token}`
+                }
+            });
+            const { data } = request;
+            return { success: true, data };
+        } catch(err) {
+            return { success: false, status: err.response?.status, error: err.response?.status };
+        }
+    },
+
+    /**
+     * 
+     * @param {string} id 
+     * @returns {any}
+     */
+
+    async fetchGuild(id) {
+        try {
+            const widget = await axios({
+                url: `https://discord.com/api/v10/guilds/${id}/widget.json`,
+                method: `get`,
+                headers: {
+                    "Authorization": `Bot ${server.cfg.token}`
+                }
+            });
+
+            const { instant_invite } = widget.data;
+
+            try {
+                const request = await axios({
+                    url: `https://discord.com/api/v10/invites/${instant_invite.split('/')[4]}`,
+                    method: `get`,
+                    headers: {
+                        "Authorization": `Bot ${server.cfg.token}`
+                    }
+                });
+                const { guild, channel } = request.data;
+
+                return {
+                    success: true,
+                    guild,
+                    channel,
+                    code: instant_invite
+                }
+            } catch(err) {
+                return { success: false, error: `The widget invite could not be retrieved!` };
+            }
+        } catch(err) {
+            if(err.response.status == 404) return { success: false, error: `Unknown Guild.` };
+            if(err.response?.status == 403) return { success: false, error: `This server's widget is disabled.` };
+            return { success: false, error: err.response?.data?.msg };
+        }
+    },
+
+    /**
+     * 
+     * @param {string} id 
+     * @returns {boolean}
+     */
+
+    isSnowflake(id) {
+        if(isNaN(id)) return false;
+        if(id.length < 14) return false;
+        return BigInt(id).toString() === id;
+    },
+
+    /**
+     * 
+     * @param {string} id 
+     * @returns {number}
+     */
+
     getTimestamp(id) {
-        return Number(BigInt(id) >> 22n) + 1_420_070_400_000;
+        return Number((BigInt(id) >> 22n) + 1420070400000n);
     }
 }

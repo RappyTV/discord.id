@@ -30,10 +30,10 @@
             </header>
             <div class="fpix">
                 <div class="row justify-content-center">
-                    <h2><%= locals.status || `500` %>: <%= locals.error || `Ein Fehler ist aufgetreten!` %></h2>
+                    <h2><%= locals.status || `500` %>: <%= locals.error || `An error ocurred!` %></h2>
                 </div>
                 <div class="row justify-content-center" style="margin-top: 2rem;">
-                    <a href="<%- locals.back %>">
+                    <a href="<%- locals.back || '/' %>">
                         <button class="btn btn-primary">Go back</button>
                     </a>
                 </div>
