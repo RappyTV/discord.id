@@ -1,6 +1,8 @@
 {
     "port": 10000,
     "token": "",
+    "theme": "#ff0000",
+    "hover": "#ff7777",
     "ssl": {
         "useSSL": false,
         "port": 11000,
