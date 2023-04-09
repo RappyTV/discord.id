@@ -86,26 +86,6 @@ input[type=text] {
     padding: .25em
 }
 
-.btn-red {
-    background-color: #ff0000 !important;
-    color: #fff !important
-}
-
-.btn-red,
-.btn-red:focus {
-    box-shadow: none !important;
-    border: none !important
-}
-
-.btn-red:hover {
-    background-color: #ff7777 !important
-}
-
-.btn-red:active {
-    box-shadow: none !important;
-    border: none !important
-}
-
 #nav a {
     color: #000
 }
@@ -597,7 +577,6 @@ h2 {
 
 .form-control:disabled,
 .form-control[readonly] {
-    background-color: #e9ecef;
     opacity: 1
 }
 
@@ -668,14 +647,14 @@ textarea.form-control.is-invalid {
 .btn {
     display: inline-block;
     font-weight: 400;
-    color: #212529;
+    background-color: #212529;
+    color: #fff;
     text-align: center;
     vertical-align: middle;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    background-color: transparent;
     border: 1px solid transparent;
     padding: .375rem .75rem;
     font-size: 1rem;
@@ -691,14 +670,21 @@ textarea.form-control.is-invalid {
 }
 
 .btn:hover {
-    color: #212529;
+    background-color: #3f4444;
+    color: #fff;
     text-decoration: none
 }
 
-.btn.focus,
+.btn:active {
+    box-shadow: none !important;
+    border: none !important
+}
+
+.btn,
 .btn:focus {
-    outline: 0;
-    box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25)
+    color: #fff;
+    box-shadow: none !important;
+    border: none !important
 }
 
 .btn.disabled,
