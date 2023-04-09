@@ -80,7 +80,7 @@
             function redirect() {
                 const input = document.getElementById(`inputid`);
                 if(document.getElementById(`lookup`).disabled || input.value == `` || input.value.length < 15) return;
-                window.location.pathname = `user/${input.value}`;
+                window.location.pathname = `${input.value}`;
             }
         </script>
     </body>
