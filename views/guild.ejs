@@ -6,7 +6,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-        <meta name="theme-color" content="<%= locals.color || `#ff0000` %>">
+        <meta name="theme-color" content="#ff0000">
         <meta name="author" content="RappyTV#6969">
         <meta name="description" content="Lookup a Discord User or Bot ID.">
         <meta name="keywords" content="discord.id, discord loopkup, id.rappytv.com">
@@ -58,7 +58,7 @@
                             <% } %>
                             <p><strong>ID</strong>: <span class="resulth"><%= locals.id %></span></p>
                             <p><strong>Name</strong>: <span class="resulth" style="color: #e49aff;"><%= locals.name %></span></p>
-                            <p><strong>Instant Invite</strong>: <span class="resulth"><a href="<%= locals.invite %>"><%= locals.invite.split('/')[4] %></a></span></p>
+                            <p><strong>Instant Invite</strong>: <span class="resulth"><a href="<%= locals.invite %>"><%= locals.invite?.split('/')[4] %></a></span></p>
                             <p><strong>Instant Invite Channel</strong>: <span class="resulth"><a href="<%= locals.inviteChannel %>"><%= locals.channelName %></a></span></p>
                             <p><strong>NSFW</strong>: <span class="resulth" style="color: #FFD966;"><%= locals.nsfw ? `Yes` : `No` %></span></p>
                             <p><strong>Created</strong>: <span class="resulth" style="color: #81c886;"><%= locals.created %></span></p>
