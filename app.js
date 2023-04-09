@@ -54,6 +54,12 @@ app.use((req, res, next) => {
     next();
 });
 
+// Pass default values once
+app.use((req, res, next) => {
+    res.locals.version = server.version;
+    next();
+});
+
 // Index page
 app.get(`/`, (req, res) => {
     res.status(200).render(`index`);
