@@ -44,7 +44,29 @@ module.exports = {
     /**
      * 
      * @param {string} id 
-     * @returns {}
+     * @returns {any}
+     */
+
+    async fetchUser(id) {
+        try {
+            const request = await axios({
+                method: `get`,
+                url: `https://discord.com/api/v10/users/${id}`,
+                headers: {
+                    'Authorization': `Bot ${server.cfg.token}`
+                }
+            });
+            const { data } = request;
+            return { success: true, data };
+        } catch(err) {
+            return { success: false, status: err.response?.status, error: err.response?.status };
+        }
+    },
+
+    /**
+     * 
+     * @param {string} id 
+     * @returns {any}
      */
 
     async fetchGuild(id) {
@@ -71,7 +93,6 @@ module.exports = {
 
                 return {
                     success: true,
-                    error: null,
                     guild,
                     channel,
                     code: instant_invite
