@@ -56,28 +56,27 @@ app.use((req, res, next) => {
 
 // Index page
 app.get(`/`, (req, res) => {
-    res.status(200).render(`index`, { version: server.version });
+    res.status(200).render(`index`);
 });
 
-app.get(`/user`, (req, res) => {
-    res.redirect(`/`);
-}).get(`/guild`, (req, res) => {
-    res.redirect(`/`);
+// Load pages without route
+app.use((req, res, next) => {
+    const file = req.originalUrl.slice(1).split(`?`)[0];
+    const redirect = server.redirects.find((r) => r.path == file);
+    if(redirect) return res.redirect(redirect.red);
+    else next();
 });
 
-app.get(`/user/:id`, async (req, res, next) => {
+app.get(`/:id`, async (req, res, next) => {
     const id = req.params.id;
-    if(!id || !server.util.isSnowflake(id)) return next({ status: 404, error: `Page not found! You sure you clicked the correct link?`, back: `/` });
+    if(!id) return next({ status: 400, error: `You have to enter a valid ID!`, back: `/` });
+    if(!server.util.isSnowflake(id)) return next({ status: 400, error: `Invalid snowflake!`, back: `/` });
 
-    try {
-        const request = await axios({
-            method: `get`,
-            url: `https://discord.com/api/v10/users/${id}`,
-            headers: {
-                'Authorization': `Bot ${server.cfg.token}`
-            }
-        });
-        const { data } = request;
+    const user = await server.util.fetchUser(id);
+    const invite = await server.util.fetchGuild(id);
+
+    if(user.success) {
+        const { data } = user;
     
         const avatar = data.avatar ? `https://cdn.discordapp.com/avatars/${id}/${data.avatar}.${data.avatar.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/${data.discriminator % 5}.png`;
         const banner = data.banner ? `https://cdn.discordapp.com/banners/${id}/${data.banner}.${data.banner.startsWith(`a_`) ? `gif` : `png`}?size=1024` : null;
@@ -88,45 +87,29 @@ app.get(`/user/:id`, async (req, res, next) => {
         const created = new Date(server.util.getTimestamp(id)).toUTCString();
         const color = data.banner_color;
     
-        res.render(`user`, { avatar, banner, id, tag, bot: data.bot, badges, created, color, version: server.version });
-    } catch(err) {
-        next({ status: err.response.status, error: err.response.statusText });
+        res.render(`user`, { avatar, banner, id, tag, bot: data.bot, badges, created, color });
+    } else if(invite.success) {
+        const { guild, channel, code } = invite;
+
+        const icon = guild.icon ? `https://cdn.discordapp.com/icons/${id}/${guild.icon}.${guild.icon.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/0.png`;
+        const banner = guild.banner ? `https://cdn.discordapp.com/banners/${id}/${guild.banner}.${guild.banner.startsWith(`a_`) ? `gif` : `png`}?size=1024` : null;
+        const inviteChannel = `https://discord.com/channels/${id}/${channel.id}`;
+        const created = new Date(server.util.getTimestamp(id)).toUTCString();
+
+        res.render(`guild`, {
+            icon,
+            banner,
+            id,
+            name: guild.name,
+            created,
+            invite: code,
+            channelName: channel.name,
+            inviteChannel
+        });
+    } else {
+        // TODO: Create extra page
+        res.render(`index`);
     }
-});
-
-app.get(`/guild/:id`, async (req, res, next) => {
-    const id = req.params.id;
-    if(!id || !server.util.isSnowflake(id)) return next({ status: 404, error: `Page not found! You sure you clicked the correct link?`, back: `/` });
-
-    const invite = await server.util.fetchGuild(id);
-    if(!invite.success) return next({ status: 401, error: invite.error });
-
-    const { guild, channel, code } = invite;
-
-    const icon = guild.icon ? `https://cdn.discordapp.com/icons/${id}/${guild.icon}.${guild.icon.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/0.png`;
-    const banner = guild.banner ? `https://cdn.discordapp.com/banners/${id}/${guild.banner}.${guild.banner.startsWith(`a_`) ? `gif` : `png`}?size=1024` : null;
-    const inviteChannel = `https://discord.com/channels/${id}/${channel.id}`;
-    const created = new Date(server.util.getTimestamp(id)).toUTCString();
-
-    res.render(`guild`, {
-        icon,
-        banner,
-        id,
-        name: guild.name,
-        created,
-        invite: code,
-        channelName: channel.name,
-        inviteChannel,
-        version: server.version
-    });
-});
-
-// Load pages without route
-app.use((req, res, next) => {
-    const file = req.originalUrl.slice(1).split(`?`)[0];
-    const redirect = server.redirects.find((r) => r.path == file);
-    if(redirect) return res.redirect(redirect.red);
-    return next({ status: 404, error: `Page not found! You sure you clicked the correct link?` });
 });
 
 app.use(server.util.error);
