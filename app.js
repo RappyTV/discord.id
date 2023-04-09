@@ -59,6 +59,12 @@ app.get(`/`, (req, res) => {
     res.status(200).render(`index`, { version: server.version });
 });
 
+app.get(`/user`, (req, res) => {
+    res.redirect(`/`);
+}).get(`/guild`, (req, res) => {
+    res.redirect(`/`);
+});
+
 app.get(`/user/:id`, async (req, res, next) => {
     const id = req.params.id;
     if(!id || !server.util.isSnowflake(id)) return next({ status: 404, error: `Page not found! You sure you clicked the correct link?`, back: `/` });
