@@ -100,7 +100,7 @@ app.get(`/:id`, async (req, res, next) => {
                 id,
                 name: `Discord Guild`,
                 created,
-                boosts: 69,
+                boosts: Math.floor(Math.random() * 99) + 1,
                 level: 3,
                 nsfw: false,
                 invite: `discord`,
@@ -137,7 +137,6 @@ app.get(`/:id`, async (req, res, next) => {
         const inviteChannel = `https://discord.com/channels/${id}/${channel.id}`;
         const created = new Date(server.util.getTimestamp(id)).toUTCString();
         const boosts = guild.premium_subscription_count;
-        const level = boosts > 13 ? 3 : boosts > 6 ? 2 : boosts > 1 ? 1 : 0;
 
         res.render(`guild`, {
             icon,
@@ -146,7 +145,6 @@ app.get(`/:id`, async (req, res, next) => {
             name: guild.name,
             created,
             boosts,
-            level,
             nsfw: guild.nsfw,
             invite: code,
             channelName: channel.name,
