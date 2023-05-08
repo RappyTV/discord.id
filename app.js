@@ -14,7 +14,7 @@ server.version = require(`./package.json`).version;
 
 const options = {};
 
-if(server.cfg.token.trim() == ``) {
+if(server.cfg.token.trim() == `` && !server.cfg.testmode) {
     console.log(`[ERROR] Please provide a valid token in src/config.json!`);
     process.exit(1);
 }
@@ -34,7 +34,7 @@ if(server.cfg.ssl.useSSL) server.https = https.createServer(options, app).listen
 server.http = http.createServer(app).listen(server.cfg.port, async () => {
     const isTokenValid = await server.util.checkToken(server.cfg.token);
 
-    if(!isTokenValid) {
+    if(!isTokenValid && !server.cfg.testmode) {
         console.log(`[ERROR] Invalid token!`);
         process.exit(1);
     }
@@ -79,6 +79,39 @@ app.get(`/:id`, async (req, res, next) => {
     const id = req.params.id;
     if(!id) return next({ status: 400, error: `You have to enter a valid ID!`, back: `/` });
     if(!server.util.isSnowflake(id)) return next({ status: 400, error: `Invalid snowflake!`, back: `/` });
+    if(server.cfg.testmode) {
+        // Testmode values
+        const random = Math.floor(Math.random() * 3);
+        const created = new Date(server.util.getTimestamp(id)).toUTCString();
+
+        if(random == 0) {
+            res.render(`user`, {
+                avatar: `https://cdn.discordapp.com/embed/avatars/${Math.floor(Math.random() * 6)}.png`,
+                id,
+                tag: `Clyde#0000`,
+                bot: false,
+                badges: ``,
+                created,
+                color: server.cfg.theme
+            });
+        } else if(random == 1) {
+            res.render(`guild`, {
+                icon: `https://cdn.discordapp.com/embed/avatars/${Math.floor(Math.random() * 6)}.png`,
+                id,
+                name: `Discord Guild`,
+                created,
+                boosts: Math.floor(Math.random() * 99) + 1,
+                level: 3,
+                nsfw: false,
+                invite: `https://discord.com/invite/discord`,
+                channelName: `welcome`,
+                inviteChannel: `https://discord.com/channels/${id}/1234567890`
+            });
+        } else {
+            res.render(`any`, { id, created });
+        }
+        return;
+    }
 
     const user = await server.util.fetchUser(id);
     const invite = await server.util.fetchGuild(id);
@@ -104,7 +137,6 @@ app.get(`/:id`, async (req, res, next) => {
         const inviteChannel = `https://discord.com/channels/${id}/${channel.id}`;
         const created = new Date(server.util.getTimestamp(id)).toUTCString();
         const boosts = guild.premium_subscription_count;
-        const level = boosts > 13 ? 3 : boosts > 6 ? 2 : boosts > 1 ? 1 : 0;
 
         res.render(`guild`, {
             icon,
@@ -113,7 +145,7 @@ app.get(`/:id`, async (req, res, next) => {
             name: guild.name,
             created,
             boosts,
-            level,
+            nsfw: guild.nsfw,
             invite: code,
             channelName: channel.name,
             inviteChannel
