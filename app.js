@@ -14,7 +14,7 @@ server.version = require(`./package.json`).version;
 
 const options = {};
 
-if(server.cfg.token.trim() == ``) {
+if(server.cfg.token.trim() == `` && !server.cfg.testmode) {
     console.log(`[ERROR] Please provide a valid token in src/config.json!`);
     process.exit(1);
 }
@@ -34,7 +34,7 @@ if(server.cfg.ssl.useSSL) server.https = https.createServer(options, app).listen
 server.http = http.createServer(app).listen(server.cfg.port, async () => {
     const isTokenValid = await server.util.checkToken(server.cfg.token);
 
-    if(!isTokenValid) {
+    if(!isTokenValid && !server.cfg.testmode) {
         console.log(`[ERROR] Invalid token!`);
         process.exit(1);
     }
