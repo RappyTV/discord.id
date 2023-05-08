@@ -102,6 +102,7 @@ app.get(`/:id`, async (req, res, next) => {
                 created,
                 boosts: 69,
                 level: 3,
+                nsfw: false,
                 invite: `discord`,
                 channelName: `welcome`,
                 inviteChannel: `1234567890`
@@ -146,6 +147,7 @@ app.get(`/:id`, async (req, res, next) => {
             created,
             boosts,
             level,
+            nsfw: guild.nsfw,
             invite: code,
             channelName: channel.name,
             inviteChannel
