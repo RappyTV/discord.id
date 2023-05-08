@@ -79,6 +79,38 @@ app.get(`/:id`, async (req, res, next) => {
     const id = req.params.id;
     if(!id) return next({ status: 400, error: `You have to enter a valid ID!`, back: `/` });
     if(!server.util.isSnowflake(id)) return next({ status: 400, error: `Invalid snowflake!`, back: `/` });
+    if(server.cfg.testmode) {
+        // Testmode values
+        const random = Math.floor(Math.random() * 3);
+        const created = new Date(server.util.getTimestamp(id)).toUTCString();
+
+        if(random == 0) {
+            res.render(`user`, {
+                avatar: `https://cdn.discordapp.com/embed/avatars/${Math.floor(Math.random() * 6)}.png`,
+                id,
+                tag: `Clyde#0000`,
+                bot: false,
+                badges: ``,
+                created,
+                color: server.cfg.theme
+            });
+        } else if(random == 1) {
+            res.render(`guild`, {
+                icon: `https://cdn.discordapp.com/embed/avatars/${Math.floor(Math.random() * 6)}.png`,
+                id,
+                name: `Discord Guild`,
+                created,
+                boosts: 69,
+                level: 3,
+                invite: `discord`,
+                channelName: `welcome`,
+                inviteChannel: `1234567890`
+            });
+        } else {
+            res.render(`any`, { id, created });
+        }
+        return;
+    }
 
     const user = await server.util.fetchUser(id);
     const invite = await server.util.fetchGuild(id);
