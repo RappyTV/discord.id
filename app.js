@@ -103,9 +103,9 @@ app.get(`/:id`, async (req, res, next) => {
                 boosts: Math.floor(Math.random() * 99) + 1,
                 level: 3,
                 nsfw: false,
-                invite: `discord`,
+                invite: `https://discord.com/invite/discord`,
                 channelName: `welcome`,
-                inviteChannel: `1234567890`
+                inviteChannel: `https://discord.com/channels/${id}/1234567890`
             });
         } else {
             res.render(`any`, { id, created });
