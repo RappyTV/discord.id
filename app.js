@@ -4,7 +4,6 @@ const app = express();
 const https = require(`https`);
 const http = require(`http`);
 const path = require(`path`);
-const axios = require(`axios`);
 const { readFileSync, existsSync } = require("fs");
 
 server.cfg = require(`./src/config.json`);
