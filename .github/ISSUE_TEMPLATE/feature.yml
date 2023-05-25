@@ -1,0 +1,14 @@
+name: Feature
+description: Give us some new ideas to improve the experience with the project.
+title: 'Feature: '
+labels: ['feature']
+assignees:
+  - 'RappyTV'
+body:
+  - type: textarea
+    id: what-feature
+    attributes:
+      label: Describe your Idea
+      description: Provide some context and a description of your idea.
+    validations:
+      required: true
