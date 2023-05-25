@@ -64,7 +64,7 @@
                                 <%- locals.badges || `-` %>
                             </p>
                             <p><span class="fas fa-asterisk"></span> <strong>Created</strong>: <span class="resulth" style="color: rgb(129, 200, 134);"><%= locals.created %></span></p>
-                            <% if(locals.banner) { %>
+                            <% if(locals.color) { %>
                                 <p><span class="fas fa-palette"></span> <strong>Banner Color</strong>:
                                     <span class="resulth">
                                         <%- `<span id="color" style="border-radius: 2px; vertical-align: sub; display: inline-block; height: 1.1rem; width: 4.5rem; background-color: ${locals.color};" onmouseover="showColor(true, '${locals.color}')">` %>
