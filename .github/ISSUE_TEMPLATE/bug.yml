@@ -1,0 +1,26 @@
+name: Bug
+description: File a bug report
+title: 'Bug: '
+labels: ['bug']
+assignees:
+  - 'RappyTV'
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Provide steps to reproduce the bug and some context.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: What version did the bug happen on?
+      description: If you don't know, just put 'latest'.
+    validations:
+      required: true
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional information
+      description: Anything else that might be helpful to fix the issue.
