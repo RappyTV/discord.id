@@ -1,7 +1,7 @@
 {
     "port": 10000,
     "token": "",
-    "testmode": true,
+    "testmode": false,
     "theme": "#ff0000",
     "hover": "#ff7777",
     "ssl": {
