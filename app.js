@@ -87,8 +87,10 @@ app.get(`/:id`, async (req, res, next) => {
             res.render(`user`, {
                 avatar: `https://cdn.discordapp.com/embed/avatars/${Math.floor(Math.random() * 6)}.png`,
                 id,
+                tag: `Clyde#0000`,
                 globalName: `@clyde`,
                 displayName: `Clyde`,
+                migrated: !!Math.floor(Math.random() * 2),
                 bot: false,
                 badges: ``,
                 created,
@@ -127,7 +129,7 @@ app.get(`/:id`, async (req, res, next) => {
         const created = new Date(server.util.getTimestamp(id)).toUTCString();
         const color = data.banner_color;
     
-        res.render(`user`, { avatar, banner, id, globalName: data.global_name, displayName: data.display_name, bot: data.bot, badges, created, color });
+        res.render(`user`, { avatar, banner, id, tag: `${data.username}#${data.discriminator}`, globalName: data.username, displayName: data.display_name, migrated: data.discriminator == '0', bot: data.bot, badges, created, color });
     } else if(invite.success) {
         const { guild, channel, code } = invite;
 
