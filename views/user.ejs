@@ -58,7 +58,12 @@
                                 </a>
                             <% } %>
                             <p><span class="fas fa-hashtag"></span> <strong>User ID</strong>: <span class="resulth"><%= locals.id %></span></p>
-                            <p><span class="fas fa-user"></span> <strong>Username</strong>: <span class="resulth" style="color: rgb(228, 154, 255);"><%= locals.tag %></span><%- locals.bot ? `<img src="img/15.png" style="vertical-align: text-top; height: 1.2rem; margin-left: 0.2rem; margin-bottom: 0.1rem;">` : `` %></p>
+                            <% if(locals.migrated) { %>
+                                <p><span class="fas fa-globe"></span> <strong>Global Name</strong>: <span class="resulth" style="color: rgb(228, 154, 255);"><%= locals.globalName %></span><%- locals.bot ? `<img src="img/15.png" style="vertical-align: text-top; height: 1.2rem; margin-left: 0.2rem; margin-bottom: 0.1rem;">` : `` %></p>
+                                <p><span class="fas fa-user"></span> <strong>Display Name</strong>: <span class="resulth" style="color: rgb(255, 160, 158);"><%= locals.displayName %></span></p>
+                            <% } else { %>
+                                <p><span class="fas fa-user"></span> <strong>Username</strong>: <span class="resulth" style="color: rgb(228, 154, 255);"><%= locals.tag %></span><%- locals.bot ? `<img src="img/15.png" style="vertical-align: text-top; height: 1.2rem; margin-left: 0.2rem; margin-bottom: 0.1rem;">` : `` %></p>
+                            <% } %>
                             <p><span class="fas fa-tags"></span> <strong>Badges</strong>:
                                 <%- locals.badges || `-` %>
                             </p>

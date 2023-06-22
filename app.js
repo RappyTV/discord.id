@@ -4,7 +4,6 @@ const app = express();
 const https = require(`https`);
 const http = require(`http`);
 const path = require(`path`);
-const axios = require(`axios`);
 const { readFileSync, existsSync } = require("fs");
 
 server.cfg = require(`./src/config.json`);
@@ -89,6 +88,9 @@ app.get(`/:id`, async (req, res, next) => {
                 avatar: `https://cdn.discordapp.com/embed/avatars/${Math.floor(Math.random() * 6)}.png`,
                 id,
                 tag: `Clyde#0000`,
+                globalName: `@clyde`,
+                displayName: `Clyde`,
+                migrated: !!Math.floor(Math.random() * 2),
                 bot: false,
                 badges: ``,
                 created,
@@ -121,14 +123,13 @@ app.get(`/:id`, async (req, res, next) => {
     
         const avatar = data.avatar ? `https://cdn.discordapp.com/avatars/${id}/${data.avatar}.${data.avatar.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/${data.discriminator % 5}.png`;
         const banner = data.banner ? `https://cdn.discordapp.com/banners/${id}/${data.banner}.${data.banner.startsWith(`a_`) ? `gif` : `png`}?size=1024` : null;
-        const tag = `${data.username}#${data.discriminator}`;
         const badges = server.util.getUserBadges(data.public_flags).map((badge) => {
             return `<span><img src="img/${badge}.png" class="badgepng"></span>`;
         }).join(`\n`);
         const created = new Date(server.util.getTimestamp(id)).toUTCString();
         const color = data.banner_color;
     
-        res.render(`user`, { avatar, banner, id, tag, bot: data.bot, badges, created, color });
+        res.render(`user`, { avatar, banner, id, tag: `${data.username}#${data.discriminator}`, globalName: data.username, displayName: data.display_name, migrated: data.discriminator == '0', bot: data.bot, badges, created, color });
     } else if(invite.success) {
         const { guild, channel, code } = invite;
 

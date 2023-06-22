@@ -259,6 +259,10 @@ a {
     content: "\f3a5"
 }
 
+.fa-globe:before {
+    content: "\f57d"
+}
+
 .fas {
     font-family: Font Awesome\ 5 Pro;
     font-weight: 900
