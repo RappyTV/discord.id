@@ -5,13 +5,13 @@
 ### 1️⃣ Installation
 You can clone the repository with
 ```
-git clone https://github.com/UltronDevelopment/discord.id.git
+git clone https://github.com/RappyTV/discord.id.git
 ```
-Or download it [here](https://github.com/UltronDevelopment/discord.id/archive/refs/heads/master.zip) if you don't have [git](https://git-scm.com/downloads) installed.<br>
+Or download it [here](https://github.com/RappyTV/discord.id/archive/refs/heads/master.zip) if you don't have [git](https://git-scm.com/downloads) installed.<br>
 Then just install the needed dependencies with `npm i`.
 
 ### 2️⃣ Configure it
-You should create a `src/config.json` file based on the [example config](https://github.com/UltronDevelopment/discord.id/blob/master/src/config.json.example):
+You should create a `src/config.json` file based on the [example config](https://github.com/RappyTV/discord.id/blob/master/src/config.json.example):
 ```json
 {
     "port": 10000,
@@ -38,7 +38,7 @@ You should create a `src/config.json` file based on the [example config](https:/
 - `ssl.key` - The path to your private key file
 
 ### 3️⃣ Redirects
-To redirect custom paths to a specific url add an object like this to the array in [src/redirects.json](https://github.com/UltronDevelopment/discord.id/blob/master/src/redirects.json):
+To redirect custom paths to a specific url add an object like this to the array in [src/redirects.json](https://github.com/RappyTV/discord.id/blob/master/src/redirects.json):
 ```json
 {
     "path": "",
