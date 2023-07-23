@@ -11,7 +11,7 @@ Or download it [here](https://github.com/UltronDevelopment/discord.id/archive/re
 Then just install the needed dependencies with `npm i`.
 
 ### 2️⃣ Configure it
-Your [src/config.json](https://github.com/UltronDevelopment/discord.id/blob/master/src/config.json) will look like this:
+You should create a `src/config.json` file based on the [example config](https://github.com/UltronDevelopment/discord.id/blob/master/src/config.json.example):
 ```json
 {
     "port": 10000,
