@@ -7,7 +7,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
         <meta name="theme-color" content="<%= locals.color || locals.themeColor %>">
-        <meta name="author" content="RappyTV#6969">
+        <meta name="author" content="RappyTV">
         <meta name="description" content="Lookup a Discord User or Bot ID.">
         <meta name="keywords" content="discord.id, discord loopkup, id.rappytv.com">
         <meta property="og:title" content="<%= locals.tag %> looked up">
@@ -60,7 +60,9 @@
                             <p><span class="fas fa-hashtag"></span> <strong>User ID</strong>: <span class="resulth"><%= locals.id %></span></p>
                             <% if(locals.migrated) { %>
                                 <p><span class="fas fa-globe"></span> <strong>Global Name</strong>: <span class="resulth" style="color: rgb(228, 154, 255);"><%= locals.globalName %></span><%- locals.bot ? `<img src="img/15.png" style="vertical-align: text-top; height: 1.2rem; margin-left: 0.2rem; margin-bottom: 0.1rem;">` : `` %></p>
-                                <p><span class="fas fa-user"></span> <strong>Display Name</strong>: <span class="resulth" style="color: rgb(255, 160, 158);"><%= locals.displayName %></span></p>
+                                <% if(locals.displayName) { %>
+                                    <p><span class="fas fa-user"></span> <strong>Display Name</strong>: <span class="resulth" style="color: rgb(255, 160, 158);"><%= locals.displayName %></span></p>
+                                <% } %>
                             <% } else { %>
                                 <p><span class="fas fa-user"></span> <strong>Username</strong>: <span class="resulth" style="color: rgb(228, 154, 255);"><%= locals.tag %></span><%- locals.bot ? `<img src="img/15.png" style="vertical-align: text-top; height: 1.2rem; margin-left: 0.2rem; margin-bottom: 0.1rem;">` : `` %></p>
                             <% } %>
@@ -81,7 +83,7 @@
                 </div>
             </div>
             <div class="footerarea">
-                <p id="footer" style="margin: 0 0 0 0;">© <a href="https://www.rappytv.com" style="color: #91D6FF !important;">RappyTV#6969</a> | <a href="https://github.com/UltronDevelopment/discord.id">Check this project out on GitHub</a> | <span style="color: #ffa09e;">Version <%= locals.version %></span> | Not affiliated with Discord, Inc.</p>
+                <p id="footer" style="margin: 0 0 0 0;">© <a href="https://www.rappytv.com" style="color: #91D6FF !important;">RappyTV</a> | <a href="https://github.com/RappyTV/discord.id">Check this project out on GitHub</a> | <span style="color: #ffa09e;">Version <%= locals.version %></span> | Not affiliated with Discord, Inc.</p>
             </div>
         </div>
 

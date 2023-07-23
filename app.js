@@ -129,7 +129,7 @@ app.get(`/:id`, async (req, res, next) => {
         const created = new Date(server.util.getTimestamp(id)).toUTCString();
         const color = data.banner_color;
     
-        res.render(`user`, { avatar, banner, id, tag: `${data.username}#${data.discriminator}`, globalName: data.username, displayName: data.display_name, migrated: data.discriminator == '0', bot: data.bot, badges, created, color });
+        res.render(`user`, { avatar, banner, id, tag: `${data.username}#${data.discriminator}`, globalName: data.username, displayName: data.global_name, migrated: data.discriminator == '0', bot: data.bot, badges, created, color });
     } else if(invite.success) {
         const { guild, channel, code } = invite;
 
