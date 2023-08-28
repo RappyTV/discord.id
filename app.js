@@ -192,3 +192,4 @@ app.get(`/:id/banner`, async (req, res, next) => {
 });
 
 app.use(server.util.error);
+app.use((req, res, next) => server.util.error({ status: 404, error: `Page not found!`, back: `/` }, req, res, next));
