@@ -1,8 +1,17 @@
+const { Request, Response, NextFunction } = require("express");
 const { default: axios } = require("axios");
 
 module.exports = {
+
+    /**
+     * 
+     * @param {{ status: number, error: string }} error 
+     * @param {Request} req 
+     * @param {Response} res 
+     * @param {NextFunction} next 
+     */
+
     error(error, req, res, next) {
-        error.version = server.version;
         res.render('error', error);
     },
 
