@@ -158,4 +158,36 @@ app.get(`/:id`, async (req, res, next) => {
     }
 });
 
+app.get(`/:id/icon`, async (req, res, next) => {
+    const id = req.params.id;
+    if(!id) return next({ status: 400, error: `You have to enter a valid ID!`, back: `/` });
+    if(!server.util.isSnowflake(id)) return next({ status: 400, error: `Invalid snowflake!`, back: `/` });
+    if(server.cfg.testmode) return res.redirect(`https://cdn.discordapp.com/embed/avatars/${Math.floor(Math.random() * 6)}.png`);
+
+    const user = await server.util.fetchUser(id);
+    const invite = await server.util.fetchGuild(id);
+
+    if(user.success) res.redirect(user.data.avatar ? `https://cdn.discordapp.com/avatars/${id}/${user.data.avatar}.${user.data.avatar.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/${user.data.discriminator % 5}.png`)
+    else if(invite.success) res.redirect(invite.guild.icon ? `https://cdn.discordapp.com/icons/${id}/${invite.guild.icon}.${invite.guild.icon.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/0.png`);
+    else return res.status(404).send({ error: `Icon not found!` });
+});
+
+app.get(`/:id/banner`, async (req, res, next) => {
+    const id = req.params.id;
+    if(!id) return next({ status: 400, error: `You have to enter a valid ID!`, back: `/` });
+    if(!server.util.isSnowflake(id)) return next({ status: 400, error: `Invalid snowflake!`, back: `/` });
+    if(server.cfg.testmode) return res.redirect(`https://cdn.discordapp.com/embed/avatars/${Math.floor(Math.random() * 6)}.png`);
+
+    const user = await server.util.fetchUser(id);
+    const invite = await server.util.fetchGuild(id);
+
+    if(user.success) {
+        if(!user.data.banner) return res.status(404).send({ error: `Banner not found!` });
+        res.redirect(`https://cdn.discordapp.com/banners/${id}/${user.data.banner}.${user.data.banner.startsWith(`a_`) ? `gif` : `png`}?size=1024`)
+    } else if(invite.success) {
+        if(!invite.guild.banner) return res.status(404).send({ error: `Banner not found!` });
+        res.redirect(`https://cdn.discordapp.com/banners/${id}/${invite.guild.banner}.${invite.guild.banner.startsWith(`a_`) ? `gif` : `png`}?size=1024`)
+    } else res.status(404).send({ error: `Banner not found!` });
+});
+
 app.use(server.util.error);
