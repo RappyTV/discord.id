@@ -155,6 +155,6 @@ module.exports = {
      */
 
     getUrl(id, type, hash, static, size) {
-        return `https://cdn.discordapp.com/${type}/${id}/${hash}.${static ? `png` : hash.startsWith(`a_`) ? `gif` : `png`}?size=${size}`;
+        return `https://cdn.discordapp.com/${type + (type != `embed/avatars` ? `/${id}` : ``)}/${hash}.${static ? `png` : hash.startsWith(`a_`) ? `gif` : `png`}?size=${size}`;
     }
 }
