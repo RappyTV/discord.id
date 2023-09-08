@@ -5,11 +5,16 @@ const https = require(`https`);
 const http = require(`http`);
 const path = require(`path`);
 const { readFileSync, existsSync } = require("fs");
+const { CronJob } = require("cron");
 
 server.cfg = require(`./src/config.json`);
 server.redirects = require(`./src/redirects.json`);
 server.util = require(`./src/util`);
 server.version = require(`./package.json`).version;
+server.cache = {
+    icons: new Map(),
+    banners: new Map()
+}
 
 const options = {};
 
@@ -38,6 +43,10 @@ server.http = http.createServer(app).listen(server.cfg.port, async () => {
         process.exit(1);
     }
     console.log(`[SERVER] HTTP listening on port ${server.cfg.port}`);
+
+    new CronJob(`*/30 * * * *`, () => {
+        server.util.clearCache();
+    }, null, true, `Europe/Berlin`, null);
 });
 
 // Views
@@ -162,13 +171,18 @@ app.get(`/:id/icon`, async (req, res, next) => {
     if(!server.util.isSnowflake(id)) return next({ status: 400, error: `Invalid snowflake!`, back: `/` });
     if(server.cfg.testmode) return res.redirect(`https://cdn.discordapp.com/embed/avatars/${Math.floor(Math.random() * 6)}.png`);
 
+    const cachedIcon = server.cache.icons.get(id);
+    if(cachedIcon) return res.redirect(cachedIcon);
+
     const user = await server.util.fetchUser(id);
-    if(user.success) return res.redirect(user.data.avatar ? `https://cdn.discordapp.com/avatars/${id}/${user.data.avatar}.${user.data.avatar.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/${user.data.discriminator % 5}.png`);
+    if(user.success) server.cache.icons.set(id, user.data.avatar ? `https://cdn.discordapp.com/avatars/${id}/${user.data.avatar}.${user.data.avatar.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/${user.data.discriminator % 5}.png`);
     
     const invite = await server.util.fetchGuild(id);
-    if(invite.success) return res.redirect(invite.guild.icon ? `https://cdn.discordapp.com/icons/${id}/${invite.guild.icon}.${invite.guild.icon.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/0.png`);
+    if(invite.success) server.cache.icons.set(id, invite.guild.icon ? `https://cdn.discordapp.com/icons/${id}/${invite.guild.icon}.${invite.guild.icon.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/0.png`);
     
-    res.status(404).send({ error: `Icon not found!` });
+    const newIcon = await server.cache.icons.get(id);
+    if(newIcon) return res.redirect(newIcon);
+    else res.status(404).send({ error: `Icon not found!` });
 });
 
 app.get(`/:id/banner`, async (req, res, next) => {
@@ -177,18 +191,18 @@ app.get(`/:id/banner`, async (req, res, next) => {
     if(!server.util.isSnowflake(id)) return next({ status: 400, error: `Invalid snowflake!`, back: `/` });
     if(server.cfg.testmode) return res.status(404).send({ error: `Banner not found!` });
 
-    const user = await server.util.fetchUser(id);
-    if(user.success) {
-        if(!user.data.banner) return res.status(404).send({ error: `Banner not found!` });
-        return res.redirect(`https://cdn.discordapp.com/banners/${id}/${user.data.banner}.${user.data.banner.startsWith(`a_`) ? `gif` : `png`}?size=1024`);
-    }
-    const invite = await server.util.fetchGuild(id);
+    const cachedBanner = server.cache.banners.get(id);
+    if(cachedBanner) return res.redirect(cachedBanner);
 
-    if(invite.success) {
-        if(!invite.guild.banner) return res.status(404).send({ error: `Banner not found!` });
-        return res.redirect(`https://cdn.discordapp.com/banners/${id}/${invite.guild.banner}.${invite.guild.banner.startsWith(`a_`) ? `gif` : `png`}?size=1024`);
-    }
-    res.status(404).send({ error: `Banner not found!` });
+    const user = await server.util.fetchUser(id);
+    if(user.success && !!user.data.banner) server.cache.banners.set(id, `https://cdn.discordapp.com/banners/${id}/${user.data.banner}.${user.data.banner.startsWith(`a_`) ? `gif` : `png`}?size=1024`);
+    
+    const invite = await server.util.fetchGuild(id);
+    if(invite.success && !!invite.guild.banner) server.cache.banners.set(id, `https://cdn.discordapp.com/banners/${id}/${invite.guild.banner}.${invite.guild.banner.startsWith(`a_`) ? `gif` : `png`}?size=1024`);
+
+    const newBanner = await server.cache.banners.get(id);
+    if(newBanner) return res.redirect(newBanner);
+    else res.status(404).send({ error: `Banner not found!` });
 });
 
 app.use(server.util.error);

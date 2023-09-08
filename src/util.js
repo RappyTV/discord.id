@@ -136,5 +136,10 @@ module.exports = {
 
     getTimestamp(id) {
         return Number((BigInt(id) >> 22n) + 1420070400000n);
+    },
+
+    clearCache() {
+        server.cache.icons.clear();
+        server.cache.banners.clear();
     }
 }
