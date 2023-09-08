@@ -201,7 +201,6 @@ app.get(`/:id/icon`, async (req, res, next) => {
     });
 
     const newIcon = server.cache.icons.get(id);
-    console.log(server.util.getUrl(id, newIcon.type, newIcon.hash, newIcon.defaultAvatar ? true : static, size));
     if(newIcon) return res.redirect(server.util.getUrl(id, newIcon.type, newIcon.hash, newIcon.defaultAvatar ? true : static, size));
     else res.status(404).send({ error: `Icon not found!` });
 });
