@@ -13,7 +13,7 @@ server.util = require(`./src/util`);
 server.version = require(`./package.json`).version;
 server.cache = {
     /**
-     * @type {Map<string, { hash: string, type: string, forcePng: boolean }>}
+     * @type {Map<string, { hash: string, type: string, defaultAvatar: boolean }>}
      */
     icons: new Map(),
     /**
@@ -184,24 +184,25 @@ app.get(`/:id/icon`, async (req, res, next) => {
     const static = req.query.static == 'true' || false;
 
     const cachedData = server.cache.icons.get(id);
-    if(cachedData) return res.redirect(server.util.getUrl(id, cachedData.type, cachedData.hash, cachedData.forcePng ? true : static, size));
+    if(cachedData) return res.redirect(server.util.getUrl(id, cachedData.type, cachedData.hash, cachedData.defaultAvatar ? true : static, size, cachedData.defaultAvatar));
 
     const user = await server.util.fetchUser(id);
     if(user.success) server.cache.icons.set(id, {
-        hash: user.data.avatar || user.data.discriminator % 5,
+        hash: user.data.avatar || (user.data.discriminator != `0` ? (user.data.discriminator % 5).toString() : ((BigInt(id) >> 22n) % 6n).toString()),
         type: user.data.avatar ? `avatars` : `embed/avatars`,
-        forcePng: !user.data.avatar
+        defaultAvatar: !user.data.avatar
     });
     
     const invite = await server.util.fetchGuild(id);
     if(invite.success) server.cache.icons.set(id, {
         hash: invite.guild.icon || `0`,
         type: invite.guild.icon ? `icons` : `embed/avatars`,
-        forcePng: !invite.guild.icon
+        defaultAvatar: !invite.guild.icon
     });
 
     const newIcon = server.cache.icons.get(id);
-    if(newIcon) return res.redirect(server.util.getUrl(id, newIcon.type, newIcon.hash, newIcon.forcePng ? true : static, size));
+    console.log(server.util.getUrl(id, newIcon.type, newIcon.hash, newIcon.defaultAvatar ? true : static, size));
+    if(newIcon) return res.redirect(server.util.getUrl(id, newIcon.type, newIcon.hash, newIcon.defaultAvatar ? true : static, size));
     else res.status(404).send({ error: `Icon not found!` });
 });
 
