@@ -5,11 +5,16 @@ const https = require(`https`);
 const http = require(`http`);
 const path = require(`path`);
 const { readFileSync, existsSync } = require("fs");
+const { CronJob } = require("cron");
 
 server.cfg = require(`./src/config.json`);
 server.redirects = require(`./src/redirects.json`);
 server.util = require(`./src/util`);
 server.version = require(`./package.json`).version;
+server.cache = {
+    icons: new Map(),
+    banners: new Map()
+}
 
 const options = {};
 
@@ -38,6 +43,10 @@ server.http = http.createServer(app).listen(server.cfg.port, async () => {
         process.exit(1);
     }
     console.log(`[SERVER] HTTP listening on port ${server.cfg.port}`);
+
+    new CronJob(`*/30 * * * *`, () => {
+        server.util.clearCache();
+    }, null, true, `Europe/Berlin`, null, true);
 });
 
 // Views
