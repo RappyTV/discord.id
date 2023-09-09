@@ -12,6 +12,7 @@ module.exports = {
      */
 
     error(error, req, res, next) {
+        if(req.headers['accept'] == `application/json`) return res.send(error);
         res.render('error', error);
     },
 
@@ -141,5 +142,19 @@ module.exports = {
     clearCache() {
         server.cache.icons.clear();
         server.cache.banners.clear();
+    },
+
+    /**
+     * 
+     * @param {string} id 
+     * @param {string} type 
+     * @param {string} hash 
+     * @param {boolean} static 
+     * @param {number | string} size 
+     * @returns {boolean}
+     */
+
+    getUrl(id, type, hash, static, size) {
+        return `https://cdn.discordapp.com/${type + (type != `embed/avatars` ? `/${id}` : ``)}/${hash}.${static ? `png` : hash.startsWith(`a_`) ? `gif` : `png`}?size=${size}`;
     }
 }

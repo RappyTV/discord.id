@@ -12,7 +12,13 @@ server.redirects = require(`./src/redirects.json`);
 server.util = require(`./src/util`);
 server.version = require(`./package.json`).version;
 server.cache = {
+    /**
+     * @type {Map<string, { hash: string, type: string, defaultAvatar: boolean }>}
+     */
     icons: new Map(),
+    /**
+     * @type {Map<string, { hash: string, type: string}>}
+     */
     banners: new Map()
 }
 
@@ -170,18 +176,32 @@ app.get(`/:id/icon`, async (req, res, next) => {
     if(!id) return next({ status: 400, error: `You have to enter a valid ID!`, back: `/` });
     if(!server.util.isSnowflake(id)) return next({ status: 400, error: `Invalid snowflake!`, back: `/` });
     if(server.cfg.testmode) return res.redirect(`https://cdn.discordapp.com/embed/avatars/${Math.floor(Math.random() * 6)}.png`);
+    if(req.query.size != null) {
+        if(isNaN(req.query.size)) return next({ status: 400, error: `Size must be a number!`, back: `/` });
+        if(req.query.size % 16 != 0 || req.query.size > 4096) return next({ status: 400, error: `Size must be below 4096 and dividable by 16!`, back: `/` });
+    }
+    const size = req.query.size || 1024;
+    const static = req.query.static == 'true' || false;
 
-    const cachedIcon = server.cache.icons.get(id);
-    if(cachedIcon) return res.redirect(cachedIcon);
+    const cachedData = server.cache.icons.get(id);
+    if(cachedData) return res.redirect(server.util.getUrl(id, cachedData.type, cachedData.hash, cachedData.defaultAvatar ? true : static, size, cachedData.defaultAvatar));
 
     const user = await server.util.fetchUser(id);
-    if(user.success) server.cache.icons.set(id, user.data.avatar ? `https://cdn.discordapp.com/avatars/${id}/${user.data.avatar}.${user.data.avatar.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/${user.data.discriminator % 5}.png`);
+    if(user.success) server.cache.icons.set(id, {
+        hash: user.data.avatar || (user.data.discriminator != `0` ? (user.data.discriminator % 5).toString() : ((BigInt(id) >> 22n) % 6n).toString()),
+        type: user.data.avatar ? `avatars` : `embed/avatars`,
+        defaultAvatar: !user.data.avatar
+    });
     
     const invite = await server.util.fetchGuild(id);
-    if(invite.success) server.cache.icons.set(id, invite.guild.icon ? `https://cdn.discordapp.com/icons/${id}/${invite.guild.icon}.${invite.guild.icon.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/0.png`);
-    
-    const newIcon = await server.cache.icons.get(id);
-    if(newIcon) return res.redirect(newIcon);
+    if(invite.success) server.cache.icons.set(id, {
+        hash: invite.guild.icon || `0`,
+        type: invite.guild.icon ? `icons` : `embed/avatars`,
+        defaultAvatar: !invite.guild.icon
+    });
+
+    const newIcon = server.cache.icons.get(id);
+    if(newIcon) return res.redirect(server.util.getUrl(id, newIcon.type, newIcon.hash, newIcon.defaultAvatar ? true : static, size));
     else res.status(404).send({ error: `Icon not found!` });
 });
 
@@ -190,18 +210,30 @@ app.get(`/:id/banner`, async (req, res, next) => {
     if(!id) return next({ status: 400, error: `You have to enter a valid ID!`, back: `/` });
     if(!server.util.isSnowflake(id)) return next({ status: 400, error: `Invalid snowflake!`, back: `/` });
     if(server.cfg.testmode) return res.status(404).send({ error: `Banner not found!` });
+    if(req.query.size != null) {
+        if(isNaN(req.query.size)) return next({ status: 400, error: `Size must be a number!`, back: `/` });
+        if(req.query.size % 16 != 0 || req.query.size > 4096) return next({ status: 400, error: `Size must be below 4096 and dividable by 16!`, back: `/` });
+    }
+    const size = req.query.size || 1024;
+    const static = req.query.static == 'true' || false;
 
-    const cachedBanner = server.cache.banners.get(id);
-    if(cachedBanner) return res.redirect(cachedBanner);
+    const cachedData = server.cache.banners.get(id);
+    if(cachedData) return res.redirect(server.util.getUrl(id, cachedData.type, cachedData.hash, static, size));
 
     const user = await server.util.fetchUser(id);
-    if(user.success && !!user.data.banner) server.cache.banners.set(id, `https://cdn.discordapp.com/banners/${id}/${user.data.banner}.${user.data.banner.startsWith(`a_`) ? `gif` : `png`}?size=1024`);
+    if(user.success && !!user.data.banner) server.cache.banners.set(id, {
+        hash: user.data.banner,
+        type: `banners`
+    });
     
     const invite = await server.util.fetchGuild(id);
-    if(invite.success && !!invite.guild.banner) server.cache.banners.set(id, `https://cdn.discordapp.com/banners/${id}/${invite.guild.banner}.${invite.guild.banner.startsWith(`a_`) ? `gif` : `png`}?size=1024`);
+    if(invite.success && !!invite.guild.banner) server.cache.banners.set(id, {
+        hash: invite.guild.banner,
+        type: `banners`
+    });
 
-    const newBanner = await server.cache.banners.get(id);
-    if(newBanner) return res.redirect(newBanner);
+    const newBanner = server.cache.banners.get(id);
+    if(newBanner) return res.redirect(server.util.getUrl(id, newBanner.type, newBanner.hash, static, size));
     else res.status(404).send({ error: `Banner not found!` });
 });
 
