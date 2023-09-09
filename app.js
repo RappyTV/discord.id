@@ -135,7 +135,7 @@ app.get(`/:id`, async (req, res, next) => {
     if(user.success) {
         const { data } = user;
     
-        const avatar = data.avatar ? `https://cdn.discordapp.com/avatars/${id}/${data.avatar}.${data.avatar.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/${data.discriminator % 5}.png`;
+        const avatar = data.avatar ? `https://cdn.discordapp.com/avatars/${id}/${data.avatar}.${data.avatar.startsWith(`a_`) ? `gif` : `png`}?size=1024` : `https://cdn.discordapp.com/embed/avatars/${data.discriminator == `0` ? (BigInt(data.id) >> 22n) % 6n : data.discriminator % 5}.png`;
         const banner = data.banner ? `https://cdn.discordapp.com/banners/${id}/${data.banner}.${data.banner.startsWith(`a_`) ? `gif` : `png`}?size=1024` : null;
         const badges = server.util.getUserBadges(data.public_flags).map((badge) => {
             return `<span><img src="img/${badge}.png" class="badgepng"></span>`;
