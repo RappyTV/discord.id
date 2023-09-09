@@ -17,7 +17,7 @@ server.cache = {
      */
     icons: new Map(),
     /**
-     * @type {Map<string, { hash: string, type: string}>}
+     * @type {Map<string, string>}
      */
     banners: new Map()
 }
@@ -218,22 +218,16 @@ app.get(`/:id/banner`, async (req, res, next) => {
     const static = req.query.static == 'true' || false;
 
     const cachedData = server.cache.banners.get(id);
-    if(cachedData) return res.redirect(server.util.getUrl(id, cachedData.type, cachedData.hash, static, size));
+    if(cachedData) return res.redirect(server.util.getUrl(id, `banners`, cachedData, static, size));
 
     const user = await server.util.fetchUser(id);
-    if(user.success && !!user.data.banner) server.cache.banners.set(id, {
-        hash: user.data.banner,
-        type: `banners`
-    });
+    if(user.success && !!user.data.banner) server.cache.banners.set(id, user.data.banner);
     
     const invite = await server.util.fetchGuild(id);
-    if(invite.success && !!invite.guild.banner) server.cache.banners.set(id, {
-        hash: invite.guild.banner,
-        type: `banners`
-    });
+    if(invite.success && !!invite.guild.banner) server.cache.banners.set(id, invite.guild.banner);
 
     const newBanner = server.cache.banners.get(id);
-    if(newBanner) return res.redirect(server.util.getUrl(id, newBanner.type, newBanner.hash, static, size));
+    if(newBanner) return res.redirect(server.util.getUrl(id, `banners`, newBanner, static, size));
     else res.status(404).send({ error: `Banner not found!` });
 });
 
