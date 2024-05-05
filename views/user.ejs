@@ -10,7 +10,7 @@
         <meta name="author" content="RappyTV">
         <meta name="description" content="Lookup a Discord User or Bot ID.">
         <meta name="keywords" content="discord.id, discord loopkup, id.rappytv.com">
-        <meta property="og:title" content="<%= locals.tag %> looked up">
+        <meta property="og:title" content="<%= locals.migrated ? `${locals.displayName} (${locals.globalName})` : locals.tag %> looked up">
         <meta property="og:url" content="https://id.rappytv.com/<%= locals.id %>">
         <meta property="og:description" content="Lookup a Discord User or Bot ID.">
         <meta property="og:image" content="<%= locals.avatar %>">
